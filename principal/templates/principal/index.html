@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Gastos</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f9; padding: 20px; }
+        .container { max-width: 800px; margin: auto; }
+        
+        /* Estilo del Formulario */
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background: #1aee41; color: rgb(226, 11, 11); padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+
+        
+        .focus-gallery { 
+            display: flex; 
+            overflow-x: scroll; 
+            scroll-snap-type: x mandatory; 
+            gap: 15px; 
+            padding: 10px 0;
+        }
+        .registro-item { 
+            min-width: 250px; 
+            background: #fff; 
+            padding: 15px; 
+            border-left: 5px solid #007bff; 
+            scroll-snap-align: start;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-radius: 4px;
+        }
+        .monto { font-weight: bold; color: #d9534f; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Nuevo Registro</h2>
+        <div class="card">
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="descripcion" placeholder="Descripción (ej. Compra de componentes)" required>
+                <input type="number" name="monto" step="0.01" placeholder="Monto (0.00)" required>
+                <input type="date" name="fecha" required>
+                <button type="submit"> Guardar </button>
+            </form>
+        </div>
+
+        <h2>Historial de Gastos</h2>
+        <div class="focus-gallery">
+            {% for r in registros %}
+            <div class="registro-item">
+                <p><strong>{{ r.fecha }}</strong></p>
+                <p>{{ r.descripcion }}</p>
+                <p class="monto">${{ r.monto }}</p>
+            </div>
+            {% empty %}
+            <p>No hay registros almacenados.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
